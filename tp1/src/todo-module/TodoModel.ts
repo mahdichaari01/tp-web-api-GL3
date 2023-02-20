@@ -12,10 +12,12 @@ export class TodoModel {
 	date_de_creation: Date;
 	status: TodoStatusEnum;
 	constructor({
+		id,
 		name,
 		description,
 		status = TodoStatusEnum.waiting,
 	}: {
+		id: string;
 		name?: string;
 		description?: string;
 		status?: TodoStatusEnum;

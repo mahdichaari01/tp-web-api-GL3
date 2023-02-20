@@ -1,15 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { UuidService } from 'src/common-module/uuid/uuid.service';
 import { todoDto } from '../todo.dto';
 import { TodoModel } from '../TodoModel';
-
 @Injectable()
 export class TodoService {
+	constructor(private uuid: UuidService) {}
 	private todos: TodoModel[] = [];
 	getTodos(): TodoModel[] {
 		return this.todos;
 	}
 	addTodo(todo: todoDto) {
-		const newTodo = new TodoModel(todo);
+		const newTodo = new TodoModel(
+			Object.assign(todo, { id: this.uuid.generate() }),
+		);
 		this.todos.push(newTodo);
 		return newTodo;
 	}
