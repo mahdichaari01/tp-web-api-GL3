@@ -6,9 +6,10 @@ import {
 	Delete,
 	Patch,
 	Param,
+	Body,
 } from '@nestjs/common';
 import { TodoModel, TodoStatusEnum } from '../TodoModel';
-
+import { todoDto } from '../todo.dto';
 @Controller('todo')
 export class TodoControllerController {
 	private todos: TodoModel[] = [];
@@ -17,13 +18,10 @@ export class TodoControllerController {
 		return this.todos;
 	}
 	@Post()
-	addTodo(
-		@Query('name') name: string | undefined,
-		@Query('description') description: string | undefined,
-		@Query('status') status: TodoStatusEnum | undefined,
-	) {
-		const todo = new TodoModel(name, description, status);
-		this.todos.push(todo);
+	addTodo(@Body() todo: todoDto) {
+		const { name, description, status } = todo;
+		const newTodo = new TodoModel(name, description, status);
+		this.todos.push(newTodo);
 	}
 	@Get(':id')
 	getTodoById(@Param('id') id: string) {
@@ -34,21 +32,17 @@ export class TodoControllerController {
 		this.todos = this.todos.filter((todo) => todo.id !== id);
 	}
 	@Patch(':id')
-	updateTodoById(
-		@Param('id') id: string,
-		@Query('name') name: string | undefined,
-		@Query('description') description: string | undefined,
-		@Query('status') status: TodoStatusEnum | undefined,
-	) {
-		const todo = this.todos.find((todo) => todo.id === id);
+	updateTodoById(@Param('id') id: string, @Body() todo: todoDto) {
+		const newTodo = this.todos.find((todo) => todo.id === id);
+		const { name, description, status } = todo;
 		if (name) {
-			todo.name = name;
+			newTodo.name = name;
 		}
 		if (description) {
-			todo.description = description;
+			newTodo.description = description;
 		}
 		if (status) {
-			todo.status = status;
+			newTodo.status = status;
 		}
 	}
 }
