@@ -10,39 +10,28 @@ import {
 } from '@nestjs/common';
 import { TodoModel, TodoStatusEnum } from '../TodoModel';
 import { todoDto } from '../todo.dto';
+import { TodoService } from '../todo-service/todo-service.service';
 @Controller('todo')
 export class TodoControllerController {
-	private todos: TodoModel[] = [];
+	constructor(private todoService: TodoService) {}
 	@Get()
 	getTodos(): TodoModel[] {
-		return this.todos;
+		return this.todoService.getTodos();
 	}
 	@Post()
 	addTodo(@Body() todo: todoDto) {
-		const { name, description, status } = todo;
-		const newTodo = new TodoModel(name, description, status);
-		this.todos.push(newTodo);
+		return this.todoService.addTodo(todo);
 	}
 	@Get(':id')
 	getTodoById(@Param('id') id: string) {
-		return this.todos.find((todo) => todo.id === id);
+		return this.todoService.getTodoById(id);
 	}
 	@Delete(':id')
 	deleteTodoById(@Param('id') id: string) {
-		this.todos = this.todos.filter((todo) => todo.id !== id);
+		return this.todoService.deleteTodoById(id);
 	}
 	@Patch(':id')
 	updateTodoById(@Param('id') id: string, @Body() todo: todoDto) {
-		const newTodo = this.todos.find((todo) => todo.id === id);
-		const { name, description, status } = todo;
-		if (name) {
-			newTodo.name = name;
-		}
-		if (description) {
-			newTodo.description = description;
-		}
-		if (status) {
-			newTodo.status = status;
-		}
+		return this.todoService.updateTodoById(id, todo);
 	}
 }

@@ -11,11 +11,15 @@ export class TodoModel {
 	description: string;
 	date_de_creation: Date;
 	status: TodoStatusEnum;
-	constructor(
-		name?: string,
-		description?: string,
-		status: TodoStatusEnum = TodoStatusEnum.waiting,
-	) {
+	constructor({
+		name,
+		description,
+		status = TodoStatusEnum.waiting,
+	}: {
+		name?: string;
+		description?: string;
+		status?: TodoStatusEnum;
+	}) {
 		this.id = v4();
 		this.date_de_creation = new Date();
 		this.name = name;
