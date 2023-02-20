@@ -1,14 +1,13 @@
 import {
 	Controller,
 	Get,
-	Query,
 	Post,
 	Delete,
 	Patch,
 	Param,
 	Body,
 } from '@nestjs/common';
-import { TodoModel, TodoStatusEnum } from '../TodoModel';
+import { TodoModel } from '../TodoModel';
 import { todoDto } from '../todo.dto';
 import { TodoService } from '../todo-service/todo-service.service';
 @Controller('todo')
