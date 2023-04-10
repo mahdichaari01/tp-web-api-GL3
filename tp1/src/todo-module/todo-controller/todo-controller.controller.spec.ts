@@ -10,7 +10,7 @@ describe("TodoControllerController", () => {
 		}).compile();
 
 		controller = module.get<TodoControllerController>(
-			TodoControllerController
+			TodoControllerController,
 		);
 	});
 
