@@ -6,9 +6,11 @@ import {
 	Patch,
 	Param,
 	Body,
+	BadRequestException,
+	NotFoundException,
 } from '@nestjs/common';
 import { TodoModel } from '../TodoModel';
-import { todoDto } from '../todo.dto';
+import { patchTodoDto, postTodoDto } from '../todo.dto';
 import { TodoService } from '../todo-service/todo-service.service';
 @Controller('todo')
 export class TodoControllerController {
@@ -18,11 +20,15 @@ export class TodoControllerController {
 		return this.todoService.getTodos();
 	}
 	@Post()
-	addTodo(@Body() todo: todoDto) {
+	addTodo(@Body() todo: postTodoDto) {
 		return this.todoService.addTodo(todo);
 	}
 	@Get(':id')
 	getTodoById(@Param('id') id: string) {
+		const todo = this.todoService.getTodoById(id);
+		if (!todo) {
+			throw new NotFoundException("Todo doesn't exist");
+		}
 		return this.todoService.getTodoById(id);
 	}
 	@Delete(':id')
@@ -30,7 +36,11 @@ export class TodoControllerController {
 		return this.todoService.deleteTodoById(id);
 	}
 	@Patch(':id')
-	updateTodoById(@Param('id') id: string, @Body() todo: todoDto) {
-		return this.todoService.updateTodoById(id, todo);
+	updateTodoById(@Param('id') id: string, @Body() todo: patchTodoDto) {
+		const todoToUpdate = this.todoService.updateTodoById(id, todo);
+		if (!todoToUpdate) {
+			throw new NotFoundException("Todo doesn't exist");
+		}
+		return todoToUpdate;
 	}
 }

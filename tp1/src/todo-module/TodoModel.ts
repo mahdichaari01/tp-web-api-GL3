@@ -1,12 +1,11 @@
-import { v4 } from 'uuid';
 export enum TodoStatusEnum {
-	'actif' = 'En Cours',
-	'waiting' = 'En Attente',
-	'done' = 'Finalisé',
+	actif = 'En Cours',
+	waiting = 'En Attente',
+	done = 'Finalisé',
 }
 
 export class TodoModel {
-	id: ReturnType<typeof v4>;
+	id: string;
 	name: string;
 	description: string;
 	date_de_creation: Date;
@@ -22,7 +21,7 @@ export class TodoModel {
 		description?: string;
 		status?: TodoStatusEnum;
 	}) {
-		this.id = v4();
+		this.id = id;
 		this.date_de_creation = new Date();
 		this.name = name;
 		this.description = description;
