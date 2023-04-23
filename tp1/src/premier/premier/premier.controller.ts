@@ -1,9 +1,9 @@
-import { Controller, Delete, Get, Patch, Post, Put, Req } from '@nestjs/common';
-import { Request } from 'express';
-@Controller('premier')
+import { Controller, Delete, Get, Patch, Post, Put, Req } from "@nestjs/common";
+import { Request } from "express";
+@Controller("premier")
 export class PremierController {
 	getmethod(@Req() request: Request): string {
-		console.log('request method :', request.method);
+		console.log("request method :", request.method);
 		return request.method;
 	}
 	@Post()
