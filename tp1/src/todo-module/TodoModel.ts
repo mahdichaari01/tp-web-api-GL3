@@ -1,9 +1,4 @@
-export enum TodoStatusEnum {
-	actif = 'En Cours',
-	waiting = 'En Attente',
-	done = 'Finalisé',
-}
-
+import { TodoStatusEnum } from "./TodoStatus";
 export class TodoModel {
 	id: string;
 	name: string;

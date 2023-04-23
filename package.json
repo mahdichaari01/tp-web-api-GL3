@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@nestjs/mapped-types": "^1.2.2",
+    "class-validator": "^0.14.0"
+  }
+}
