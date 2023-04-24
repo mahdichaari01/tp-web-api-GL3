@@ -8,6 +8,8 @@ import { TodoServiceDb } from "./todo-service-db/todo-service-db.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { TodoEntity } from "./Entities/todo.Entity";
 
+export const DEFAULT_PAGE_SIZE = 10;
+
 @Module({
 	controllers: [TodoController, TodoDBController],
 	providers: [TodoService, TodoServiceDb],

@@ -9,9 +9,10 @@ import {
 	NotFoundException,
 	UsePipes,
 	ValidationPipe,
+	Query,
 } from "@nestjs/common";
 import { TodoModel } from "../TodoModel";
-import { patchTodoDto, postTodoDto } from "../todo.dto";
+import { patchTodoDto, postTodoDto, searchDTO } from "../todo.dto";
 import { TodoService } from "../todo-service/todo-service.service";
 import { TodoServiceDb } from "../todo-service-db/todo-service-db.service";
 import { TodoStatusEnum } from "../TodoStatus";
@@ -53,8 +54,13 @@ export class TodoController {
 export class TodoDBController {
 	constructor(private todoService: TodoServiceDb) {}
 	@Get()
-	getTodos() {
-		return this.todoService.getTodos();
+	getTodos(@Query() query: searchDTO) {
+		return this.todoService.searchByStatusOrString(
+			query.string,
+			query.status,
+			query.page,
+			query.pageSize,
+		);
 	}
 	@Post()
 	addTodo(@Body() todo: postTodoDto) {
@@ -62,10 +68,6 @@ export class TodoDBController {
 	}
 	@Get(":id")
 	getTodoById(@Param("id") id: string) {
-		const todo = this.todoService.getTodoById(id);
-		if (!todo) {
-			throw new NotFoundException("Todo doesn't exist");
-		}
 		return this.todoService.getTodoById(id);
 	}
 	@Get("count/:status")
@@ -74,6 +76,10 @@ export class TodoDBController {
 	}
 	@Delete(":id")
 	deleteTodoById(@Param("id") id: string) {
+		return this.todoService.softDeleteTodoById(id);
+	}
+	@Delete("/hard/:id")
+	hardDeleteTodoById(@Param("id") id: string) {
 		return this.todoService.deleteTodoById(id);
 	}
 	@Patch(":id")
@@ -83,5 +89,13 @@ export class TodoDBController {
 			throw new NotFoundException("Todo doesn't exist");
 		}
 		return todoToUpdate;
+	}
+	@Get("restore/:id")
+	restoreTodoById(@Param("id") id: string) {
+		return this.todoService.restoreTodoById(id);
+	}
+	@Get("restore")
+	restoreAllTodos() {
+		return this.todoService.restoreAllTodos();
 	}
 }

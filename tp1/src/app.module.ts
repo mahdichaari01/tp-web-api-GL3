@@ -7,6 +7,10 @@ import { CommonModuleModule } from "./common-module/common-module.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TodoEntity } from "./todo-module/Entities/todo.Entity";
+import {
+	QbPaginationService,
+	PAGINATION_SERVICE_TOKEN,
+} from "./common-module/qb-pagination/qb-pagination.service";
 
 @Module({
 	imports: [

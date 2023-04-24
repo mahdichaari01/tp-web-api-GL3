@@ -1,6 +1,12 @@
 import { ValidationErrors } from "src/Messages/ErrorMessages";
 import { TodoStatusEnum } from "./TodoStatus";
-import { IsNotEmpty, MinLength, MaxLength, IsEnum } from "class-validator";
+import {
+	IsNotEmpty,
+	MinLength,
+	MaxLength,
+	IsEnum,
+	IsOptional,
+} from "class-validator";
 import { PartialType, PickType } from "@nestjs/mapped-types";
 
 export class postTodoDto {
@@ -18,3 +24,11 @@ export class postTodoDto {
 }
 export class patchTodoDto extends PartialType(postTodoDto) {}
 export class countByStatusDto extends PickType(postTodoDto, ["status"]) {}
+export class searchDTO extends PartialType(PickType(postTodoDto, ["status"])) {
+	@IsOptional()
+	string?: string;
+	@IsOptional()
+	page?: number;
+	@IsOptional()
+	pageSize?: number;
+}
