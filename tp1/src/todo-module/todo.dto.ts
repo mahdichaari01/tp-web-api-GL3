@@ -1,4 +1,4 @@
-import { ValidationErrors } from "src/Messages/ErrorMessages";
+import { ValidationErrors } from "../Messages/ErrorMessages";
 import { TodoStatusEnum } from "./TodoStatus";
 import {
 	IsNotEmpty,

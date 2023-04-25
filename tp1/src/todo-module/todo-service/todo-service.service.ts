@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { UUID_TOKEN } from "src/common-module/common-module.module";
+import { UUID_TOKEN } from "../../common-module/common-module.module";
 import { patchTodoDto, postTodoDto } from "../todo.dto";
 import { TodoModel } from "../TodoModel";
 @Injectable()

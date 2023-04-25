@@ -15,4 +15,6 @@ export class TodoEntity extends Timestampable {
 		default: TodoStatusEnum.waiting,
 	})
 	status: TodoStatusEnum;
+	@Column({ nullable: true })
+	owner: string;
 }

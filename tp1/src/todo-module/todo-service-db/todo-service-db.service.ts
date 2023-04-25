@@ -8,7 +8,7 @@ import { TodoStatusEnum } from "../TodoStatus";
 import {
 	PAGINATION_SERVICE_TOKEN,
 	QbPaginationService,
-} from "src/common-module/qb-pagination/qb-pagination.service";
+} from "../../common-module/qb-pagination/qb-pagination.service";
 import { DEFAULT_PAGE_SIZE } from "../todo-module.module";
 
 @Injectable()
@@ -36,25 +36,35 @@ export class TodoServiceDb {
 		if (!todo) throw new NotFoundException("No todo found");
 		return todo;
 	}
-	addTodo(todo: postTodoDto | postTodoDto[]): Promise<TodoEntity[]> {
+	addTodo(
+		todo: postTodoDto | postTodoDto[],
+		userID?: string,
+	): Promise<TodoEntity[]> {
 		if (!Array.isArray(todo)) todo = [todo];
+		todo = todo.map((todo) => Object.assign(todo, { owner: userID }));
 		const newTodo = this.todoRepository.create(todo);
 		return this.todoRepository.save(newTodo);
 	}
-	updateTodoById(id: string, todo: patchTodoDto) {
-		return this.todoRepository.update(id, todo);
+	async updateTodoById(id: string, todo: patchTodoDto, user?: string) {
+		return this.todoRepository.update(
+			{
+				id: id,
+				owner: user,
+			},
+			todo,
+		);
 	}
-	softDeleteTodoById(id: string) {
-		return this.todoRepository.softDelete(id);
+	softDeleteTodoById(id: string, user: string) {
+		return this.todoRepository.softDelete({ id: id, owner: user });
 	}
-	deleteTodoById(id: string) {
-		return this.todoRepository.delete(id);
+	deleteTodoById(id: string, user: string) {
+		return this.todoRepository.delete({ id: id, owner: user });
 	}
-	restoreTodoById(id: string) {
-		return this.todoRepository.restore(id);
+	restoreTodoById(id: string, user: string) {
+		return this.todoRepository.restore({ id: id, owner: user });
 	}
-	restoreAllTodos() {
-		return this.todoRepository.restore({});
+	restoreAllTodos(user: string) {
+		return this.todoRepository.restore({ owner: user });
 	}
 	async searchByStatusOrString(
 		string?: string,

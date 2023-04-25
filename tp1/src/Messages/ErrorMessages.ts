@@ -18,4 +18,7 @@ export const ValidationErrors = {
 			(val) => `${val}`,
 		)}`;
 	},
+	isString: (validationData: ValidationArguments) => {
+		return `La propriété ${validationData.property} doit être une chaîne de caractères`;
+	},
 };

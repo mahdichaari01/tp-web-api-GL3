@@ -10,6 +10,8 @@ import {
 	UsePipes,
 	ValidationPipe,
 	Query,
+	Headers,
+	Request,
 } from "@nestjs/common";
 import { TodoModel } from "../TodoModel";
 import { patchTodoDto, postTodoDto, searchDTO } from "../todo.dto";
@@ -49,7 +51,7 @@ export class TodoController {
 		return todoToUpdate;
 	}
 }
-@Controller({ version: "2", path: "todo" })
+@Controller("DBTodo")
 @UsePipes(ValidationPipe)
 export class TodoDBController {
 	constructor(private todoService: TodoServiceDb) {}
@@ -63,39 +65,57 @@ export class TodoDBController {
 		);
 	}
 	@Post()
-	addTodo(@Body() todo: postTodoDto) {
-		return this.todoService.addTodo(todo);
+	addTodo(@Body() todo: postTodoDto, @Request() req: Request) {
+		return this.todoService.addTodo(todo, req["userID"]);
 	}
 	@Get(":id")
 	getTodoById(@Param("id") id: string) {
 		return this.todoService.getTodoById(id);
+	}
+	@Get("count/all")
+	async countTodos() {
+		return {
+			done: await this.todoService.countByStatus(TodoStatusEnum.done),
+			waiting: await this.todoService.countByStatus(
+				TodoStatusEnum.waiting,
+			),
+			actif: await this.todoService.countByStatus(TodoStatusEnum.actif),
+		};
 	}
 	@Get("count/:status")
 	countByStatus(@Param("status") status: TodoStatusEnum) {
 		return this.todoService.countByStatus(status);
 	}
 	@Delete(":id")
-	deleteTodoById(@Param("id") id: string) {
-		return this.todoService.softDeleteTodoById(id);
+	deleteTodoById(@Param("id") id: string, @Request() req: Request) {
+		return this.todoService.softDeleteTodoById(id, req["userID"]);
 	}
 	@Delete("/hard/:id")
-	hardDeleteTodoById(@Param("id") id: string) {
-		return this.todoService.deleteTodoById(id);
+	hardDeleteTodoById(@Param("id") id: string, @Request() req: Request) {
+		return this.todoService.deleteTodoById(id, req["userID"]);
 	}
 	@Patch(":id")
-	updateTodoById(@Param("id") id: string, @Body() todo: patchTodoDto) {
-		const todoToUpdate = this.todoService.updateTodoById(id, todo);
+	updateTodoById(
+		@Param("id") id: string,
+		@Body() todo: patchTodoDto,
+		@Request() req: Request,
+	) {
+		const todoToUpdate = this.todoService.updateTodoById(
+			id,
+			todo,
+			req["userID"],
+		);
 		if (!todoToUpdate) {
 			throw new NotFoundException("Todo doesn't exist");
 		}
 		return todoToUpdate;
 	}
 	@Get("restore/:id")
-	restoreTodoById(@Param("id") id: string) {
-		return this.todoService.restoreTodoById(id);
+	restoreTodoById(@Param("id") id: string, @Request() req: Request) {
+		return this.todoService.restoreTodoById(id, req["userID"]);
 	}
 	@Get("restore")
-	restoreAllTodos() {
-		return this.todoService.restoreAllTodos();
+	restoreAllTodos(@Request() req: Request) {
+		return this.todoService.restoreAllTodos(req["userID"]);
 	}
 }
